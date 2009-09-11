@@ -21,7 +21,7 @@ class BuilderShell extends Shell {
 
 	function main() {
 		$this->__startPid();
-		
+
 		$builds = $this->__gather();
 
 		if (empty($builds)) {
@@ -43,20 +43,20 @@ class BuilderShell extends Shell {
 				if (!$this->vc = $this->vcs[$build['version_control']]) {
 					$this->__exception(__METHOD__, 'Unsupported version control system: :vcs', array('vcs' => $build['version_control']));
 				}
-        
-        $this->tmp = TMP . 'builder' . DS . $build['id'];
-        $this->vcs[$build['version_control']]->setConf($build);
-				
+
+				$this->tmp = TMP . 'builder' . DS . $build['id'];
+				$this->vcs[$build['version_control']]->setConf($build);
+
 				$success = true;
 				$status = null;
 
 				$this->Instance->Build->start($build['id'], $build['source'], $build['version'], $build['source_branch']);
-        $version = $build['version'];
-        if(!empty($build['source_branch'])) {
-          $version = $build['source_branch'] . ', ' . $version;
-        }
+				$version = $build['version'];
+				if (!empty($build['source_branch'])) {
+					$version = $build['source_branch'] . ', ' . $version;
+				}
 				$this->__setStatus('Building ' . $build['source'] . ' (' . $version . ')');
-				
+
 				$this->build = $build;
 
 				$this->__findCacheDirs();
@@ -84,10 +84,10 @@ class BuilderShell extends Shell {
 																	'tests_passed' => $this->tests_passed,
 																	'tests_run' => $this->tests_run));
 		}
-		
+
 		$this->__stopPid();
 	}
-	
+
 	function __gather() {
 		$builds = array();
 		$instances = $this->Instance->find('build');
@@ -122,7 +122,7 @@ class BuilderShell extends Shell {
 		if (empty($this->vcs[$instance['version_control']])) {
 			$this->vcs[$instance['version_control']] = ConnectionManager::getDataSource($instance['version_control']);
 		}
-		
+
 		$this->vcs[$instance['version_control']]->setConf($instance);
 
 		if ($instance['continuous']) {
@@ -245,7 +245,7 @@ class BuilderShell extends Shell {
 			if (in_array($item, $options['skip'])) {
 				continue;
 			}
-      
+
 			$this->__syncRecursive(Folder::addPathElement($fromDir, $item), Folder::addPathElement($toDir, $item), $options);
 		}
 
@@ -316,10 +316,10 @@ class BuilderShell extends Shell {
 	}
 
 	function __runTests() {
-		if(!$this->build['test']) {
+		if (!$this->build['test']) {
 			return;
 		}
-		
+
 		$this->__setStatus('Starting unit tests');
 
 		$console = $this->build['cake_path'] . DS . 'console' . DS . 'cake';
@@ -330,11 +330,11 @@ class BuilderShell extends Shell {
 		$this->tests_passed = 0;
 		$this->tests_run = 0;
 		foreach($tests as $test) {
-			$case = substr($test, strpos($test, 'cases') + 6, -9);
+		$case = substr($test, strpos($test, 'cases') + 6, -9);
 			$this->__setStatus('Running unit test: :case', compact('case'));
 			$cmd = sprintf('%s -app %s testsuite app case %s', $console, $this->build['app_path'], $case);
 			$output = array();
-			
+
 			$start = time();
 			exec($cmd, $output, $return_value);
 			$end = time();
@@ -344,7 +344,7 @@ class BuilderShell extends Shell {
 				$success = true;
 				$this->tests_passed ++;
 			}
-			
+
 			$data = array('build_id' => $this->Instance->Build->id,
 										'case' => $case,
 										'success' => $success,
@@ -359,10 +359,10 @@ class BuilderShell extends Shell {
 	}
 
 	function __formatTestOutput($output) {
-		if(empty($output)) {
+		if (empty($output)) {
 			return '';
 		}
-		
+
 		foreach($output as $i => $line) {
 			if (preg_match('/Running app case/', $line)) {
 				break;
@@ -391,16 +391,16 @@ class BuilderShell extends Shell {
 
 		throw new Exception($exception);
 	}
-	
+
 	function __startPid() {
 		if (Cache::read('Builder.pid')) {
 			$this->out(__('Builder already running', true));
 			$this->_stop();
 		}
-		
+
 		Cache::write('Builder.pid', true);
 	}
-	
+
 	function __stopPid() {
 		Cache::delete('Builder.pid');
 	}
