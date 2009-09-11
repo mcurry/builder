@@ -10,7 +10,7 @@
  */
  
 /* About */
-  This is app is about as rough as you can get.  It's like 100 steps away from even being alpha.  Consider yourself warned.  Plus, I coded it to fit my specific needs, so you'll probably need to make some changes (and give back?) to make it fit your deployments.
+  This is app is about as rough as you can get.  It's like 100 steps away from even being alpha.  Consider yourself warned.  Plus, I coded it to fit my specific needs, so you'll probably need to make some changes (and give back?) to make it fit your deployments.  PHP5 only.  I doubt it works on Windows.  Will probably work on OS X, but I haven't checked.  Works on Linux.
   
 /* Why Bother Then? */
   1. I spent some time researching some of the better know CI apps.  They all seemed to bloat-y and java-y for my tastes.  I wanted something simpler and awesomer.
@@ -23,62 +23,35 @@
   3. My git-fu isn't so great.  The git implemention could probably use some love from someone whose more experience with git.
   4. The SVN part uses export instead of switch, which makes it slower then it needs to be.  I've had issues with switch in the past, which is why I avoided it.  That was probably a bad decision.
   5. Doesn't handle DB updates (and should probably have an option to make a backup before build).  I intend to implement Cake's migrations.  
-  6. No integration with build systems.
+  6. No integration with build systems such as ant, phing or capistrano.
   7. Single user.
   8. Lots more...that's just what I could think of off the top of my head.
 
-/* Instructions */
+/* Install Instructions */
   1. Get the latest version of CakePHP 1.2 (http://cakephp.org)
 	2. Get your Cake install up and running.
 	3. Download the repo and replace the app dir.
 	4. Create a database and run app/config/sql/builder.sql to create the tables.
 	5. Copy app/config/database.php.default to database.php and update it with your DB settings.
 	
+/* Setup Instructions */
+	1. Visit http://<your_app>/users/install to create a user.
+	2. Click "add site" in upper right and create a site.
+	3. Click "add instance" to create an instance of the site (test, qa, stage, beta, production...)
+	  - Enabled and name are pretty clear
+	  - Path is the full path on the file system where you want the install to go.
+	  - App and Cake Path are the full paths to the app and cake folders after the install.  I did this because sometimes these folders aren't in the root of the install path.  These are only needed if you are going to be running unit tests.
+	  - Skip Sync: any files and directories you don't want deleted or sync'd as part of the build.  I usually have database.php in here.
+	  - Continous: will do a build anytime there is a new commit.  If you don't select this you will manually kick off builds.
+	  - Version Control: Right now SVN and git are supported.
+	  - Source is the path in your version control to the app.  Branch is what branch/tag you want to build.  
+	  - Source username and password can be left blank if you some other form of auth setup.  Or this can be set in the datasource in database.php
+	  - Test is if you want to run the unit tests.
+	  - Test Each is if you want to do a build and run the tests for every commit.
+	  - Force Debug Off: will make sure that debug is set to 0.
+	  - Version Txt: will write a version.txt in your webroot dir that will info about the current build.
 	
-	2. Get the latest version of CakePHP
-	2. Add the panels you want active in your bootstrap.php:
-		Configure::write('Status.panels', array('Status.google_analytics' => array('visits', 'referrers', 'keywords'),
-																						'Status.system',
-																						'Status.shell',
-																						'Status.tests'
-																						'Status.logs' => array('error', 'debug'),
-																					 ));
-	3. By default no one can reach the status panel.  It is up to you to deteremine who will have access.  In your AppController::beforeFilter() put:
-		if(...) {
-			Configure::write('Status.allow', true);
-		}
-	4. Go to http://yourapp/status
-	
-/* Core Panels */
-  /* Google Analytics */
-  Multiple panels for quick info on your visits, refererrs and search engine keywords using the Google Analytics API.  Adjustable timeframes to get a recent or long range snapshot.
-	You must set up the config file to access your analytics via Google's API:
-		1) Rename /app/plugins/status/config/status.php.default to status.php
-		2) Edit the file to include your Google email and password.
-			 The account_id can be found in the url at Google (https://www.google.com/analytics/reporting/?reset=1&id=xxxxxxxx)
-		
-  /* Shell */
-  Add logging to your shells to capture results.  Great for shells that run from cron.  Clicking on the shell link in the panel pops open a window with detailed information.  Requires integrating the log task in your shell:
-		1) Run the SQL in /app/plugins/status/config/sql/status_consoles.sql
-    2) Include the task in your shell's attributes:
-       var $tasks = array('Log');
-    3) Start the logging in the beginning of your shell:
-       $this->Log->start();
-    4) Store any messages you want to be available in the panel:
-       $this->Log->out("Processed $count records");
-    5) Signal the script is done:
-       $this->Log->end();
-
-  /* Tests */
-  Run your app's unit tests right from the panel, regardless of debug mode.  If there are any errors you can click on the summary line to get the full details.
-	
-  /* System */
-  Basic infomation about the system hardware, including disk space and uptime.
-  
-  /* Logs */
-  Show Cake's log files.  Can be used on any log file in /app/tmp/logs, including custom ones.  Just pass the log file name(s).
-
-/* Other Panels */
-  /* Click Tracking */
-  Track links that are click on your app.  Mainly used for outgoing affiliate links, but can also be used for downloaded files.
-  http://github.com/mcurry/click
+/* Running The Build */
+  1. The builder shell can be added to cron to check if new builds are needed.  I run it every minute, since only one instance will run at a time if it's already going the second one will just die.
+  2. I would suggest running the build manually until all the kinks are worked out.  From /app ../cake/console/cake builder.
+  3. If something goes horribly wrong and the shell dies it will leave behind a file in /tmp/cache that needs to be deleted before it can run again.
