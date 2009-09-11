@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `builds` (
 CREATE TABLE IF NOT EXISTS `instances` (
   `id` int(11) NOT NULL auto_increment,
   `site_id` int(11) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
   `last_version` varchar(50) NOT NULL,
   `pending` tinyint(1) NOT NULL,
   `name` varchar(50) NOT NULL,
