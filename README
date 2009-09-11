@@ -20,7 +20,7 @@
 /* What's Missing */
   1. No email notifications
   2. No remote sync
-  3. My git-fu isn't so great.  The git implemention could probably use some love from someone whose more experience with git.
+  3. My git-fu isn't so great.  The git implemention could probably use some love from someone with more experience with git.
   4. The SVN part uses export instead of switch, which makes it slower then it needs to be.  I've had issues with switch in the past, which is why I avoided it.  That was probably a bad decision.
   5. Doesn't handle DB updates (and should probably have an option to make a backup before build).  I intend to implement Cake's migrations.  
   6. No integration with build systems such as ant, phing or capistrano.
