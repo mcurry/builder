@@ -1,0 +1,83 @@
+/* =general
+-----------------------------------------------------------------------------*/
+a {
+	background: inherit;
+}
+
+/* =menu
+-----------------------------------------------------------------------------*/
+ul#menu {
+	display: block;
+	float:right;
+	margin: 0;
+	list-style: none;
+}
+	#menu li {
+		display: block;
+		float: left;
+		white-space: nowrap;
+	}
+	#menu li a {
+		display: block;
+		padding:  20px 12px 20px;
+		text-decoration: none;
+		color: #fff;
+		font-weight: bold;
+	}
+	#menu li a:hover {
+		background: #fff;
+		color: #003D4C;
+	}
+
+/* =sites
+-----------------------------------------------------------------------------*/
+.site { 
+	background: #F6F9FB;
+	border: 1px solid #E1E1E1;
+	margin: 15px 0;
+	padding: 10px;
+}
+	.site h2 {
+		font-size: 1.3em;
+		background: inherit;
+		padding: 0 0 10px 0;
+	}
+	.site h2 a {
+		font-size: .9em;
+	}
+	
+/* =instance
+-----------------------------------------------------------------------------*/
+.instance {
+	border-collapse: collapse;
+	border: 1px solid #ccc;
+}
+	.instance a {
+		text-decoration: none;
+	}
+	.instance a:hover {
+		text-decoration: underline;
+		background: inherit;
+	}
+	
+/* =tables
+-----------------------------------------------------------------------------*/
+th {
+	border: inherit;
+	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+}
+td {
+	color: #000;
+	border-bottom: 1px solid #ccc;
+	cursor: pointer;
+}
+	.success td {
+		background: #DFFFCF;
+	}
+	.error td {
+		background: #FFF2F2;
+	}
+	.running td {
+		background: #F0F0F0;
+	}
